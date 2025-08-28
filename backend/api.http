@@ -1,0 +1,45 @@
+### CRÉER un premier événement (POST)
+POST http://localhost:3000/api/events
+Content-Type: application/json
+
+{
+  "name": "Soirée Catan",
+  "date": "2025-09-15T19:00:00.000Z",
+  "max_players": 4
+}
+
+###
+
+### CRÉER un deuxième événement
+POST http://localhost:3000/api/events
+Content-Type: application/json
+
+{
+  "name": "Découverte de Wingspan",
+  "date": "2025-09-22T20:00:00.000Z",
+  "max_players": 3
+}
+
+###
+
+### LIRE tous les événements (GET)
+GET http://localhost:3000/api/events
+
+###
+
+### LIRE l'événement avec l'ID 1 (GET)
+GET http://localhost:3000/api/events/1
+
+###
+
+### S'INSCRIRE à l'événement 1 (PATCH)
+# Cliquez plusieurs fois pour voir le nombre de joueurs augmenter,
+# puis pour voir l'erreur "L'événement est complet."
+PATCH http://localhost:3000/api/events/1/register
+
+###
+
+### SUPPRIMER l'événement 2 (DELETE)
+DELETE http://localhost:3000/api/events/2
+
+###

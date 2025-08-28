@@ -1,42 +1,47 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
-
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
+# =========================================
+# Fichiers générés par les éditeurs et OS
+# =========================================
+.DS_Store
+*.log
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
+*.sublime-project
+*.sublime-workspace
 
-# Miscellaneous
+# =========================================
+# Fichiers Angular
+# =========================================
+# Dossiers de dépendances compilées
+/node_modules/
+/dist/
+/tmp/
+/out-tsc/
+
+# Cache d'Angular
 /.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
 
-# System files
-.DS_Store
-Thumbs.db
+# Fichiers de log et de rapport
+/npm-debug.log*
+/yarn-error.log
+/coverage/
+
+# =========================================
+# Fichiers du Backend (Node.js / SQLite)
+# -- NOS AJOUTS --
+# =========================================
+# Dossier des dépendances du backend
+backend/node_modules/
+
+# Fichiers de base de données SQLite
+# (On ne versionne jamais les données, seulement le code qui les structure)
+backend/*.db
+backend/*.db-journal
+
+# Fichiers de logs potentiels du backend
+backend/*.log
+
+# Fichiers d'environnement contenant des secrets
+backend/.env
