@@ -1,40 +1,51 @@
-.event-card {
-  // ... vos styles existants pour la carte
-
-  .card-actions {
+.card-container {
     display: flex;
-    gap: 10px; // Espace entre les boutons
-    margin-top: 1rem;
-  }
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;;
+}
 
-  // Styles pour tous les boutons de la carte
-  button {
-    padding: 8px 15px;
-    border: none;
+.event-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 250px;
+    margin: 10px;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s;
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
+    padding: 10px;
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
     }
-  }
+    button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.2s;
 
-  .register-btn {
-    background-color: #007bff; // Bleu
-    color: white;
-    &:hover:not(:disabled) {
-      background-color: #0056b3;
+        &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        }
     }
-  }
 
-  .delete-btn {
-    background-color: #dc3545; // Rouge
-    color: white;
-    &:hover:not(:disabled) {
-      background-color: #c82333;
+    .register-btn {
+        background-color: #007bff; // Bleu
+        color: white;
+        &:hover:not(:disabled) {
+        background-color: #0056b3;
+        }
     }
-  }
+
+    .delete-btn {
+        background-color: #dc3545; // Rouge
+        color: white;
+        &:hover:not(:disabled) {
+        background-color: #c82333;
+        }
+    }
 }
