@@ -1,3 +1,7 @@
+<app-event-form (eventCreated)="addEventToList($event)"></app-event-form>
+
+<hr class="separator">
+
 <section class="event-list-container">
   <h2>Prochaines soirées</h2>
 
@@ -10,7 +14,14 @@
       <p>
         <strong>Places :</strong> {{ event.current_players }} / {{ event.max_players }}
       </p>
-      <button>S'inscrire</button>
+      <button (click)="onRegister(event.id)" [disabled]="event.current_players >= event.max_players">
+        @if (event.current_players >= event.max_players) {
+          Complet
+        } @else {
+          S'inscrire
+        }
+      </button>
+      <button class="delete-btn" (click)="onDelete(event.id, event.name)">Supprimer</button>
     </article>
   } @empty {
     <p>Aucune soirée de prévue pour le moment.</p>

@@ -1,0 +1,40 @@
+.event-card {
+  // ... vos styles existants pour la carte
+
+  .card-actions {
+    display: flex;
+    gap: 10px; // Espace entre les boutons
+    margin-top: 1rem;
+  }
+
+  // Styles pour tous les boutons de la carte
+  button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  .register-btn {
+    background-color: #007bff; // Bleu
+    color: white;
+    &:hover:not(:disabled) {
+      background-color: #0056b3;
+    }
+  }
+
+  .delete-btn {
+    background-color: #dc3545; // Rouge
+    color: white;
+    &:hover:not(:disabled) {
+      background-color: #c82333;
+    }
+  }
+}

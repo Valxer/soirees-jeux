@@ -37,7 +37,7 @@ const db = new sqlite3.Database('./soirees-jeux.db', (err) => {
 
 // READ - Obtenir la liste de tous les événements
 app.get('/api/events', (req, res) => {
-  const sql = "SELECT * FROM events ORDER BY date DESC";
+  const sql = "SELECT * FROM events ORDER BY date ASC";
   db.all(sql, [], (err, rows) => {
     if (err) {
       res.status(500).json({ "error": err.message });
