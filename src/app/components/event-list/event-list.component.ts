@@ -4,6 +4,8 @@ import { ApiService } from '../../services/api.service';
 import { GameEvent } from '../../models/event';
 import { EventFormComponent } from '../event-form/event-form.component';
 
+type LoadingState = 'loading' | 'loaded' | 'error';
+
 @Component({
   selector: 'app-event-list',
   standalone: true,
@@ -14,11 +16,24 @@ import { EventFormComponent } from '../event-form/event-form.component';
 export class EventListComponent implements OnInit {
   private apiService = inject(ApiService);
   public events = signal<GameEvent[]>([]);
+  public state = signal<LoadingState>('loading'); 
 
   ngOnInit(): void {
+    this.loadEvents();
+  }
+
+  loadEvents(): void {
+    this.state.set('loading');
+
     this.apiService.getEvents().subscribe({
-      next: (response) => this.events.set(response.data),
-      error: (err) => console.error('Erreur lors de la récupération des événements', err)
+      next: (response) => {
+        this.events.set(response.data);
+        this.state.set('loaded');
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des événements', err);
+        this.state.set('error');
+      }
     });
   }
 
