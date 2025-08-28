@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { GameEvent } from '../../models/event';
 import { EventFormComponent } from '../event-form/event-form.component';
+import { AuthService } from '../../services/auth.service';
 
 type LoadingState = 'loading' | 'loaded' | 'error';
 
@@ -15,6 +16,8 @@ type LoadingState = 'loading' | 'loaded' | 'error';
 })
 export class EventListComponent implements OnInit {
   private apiService = inject(ApiService);
+  authService = inject(AuthService);
+
   public events = signal<GameEvent[]>([]);
   public state = signal<LoadingState>('loading'); 
 
@@ -36,27 +39,16 @@ export class EventListComponent implements OnInit {
       }
     });
   }
+  
+  addEventToList(newEvent: GameEvent): void {
+  this.events.update(currentEvents => {
+    const updatedList = [...currentEvents, newEvent];
 
-  onRegister(eventId: number): void {
-    this.apiService.registerToEvent(eventId).subscribe({
-      next: (response) => {
-        const updatedEvent = response.data;
+    updatedList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-        this.events.update(currentEvents => {
-          return currentEvents.map(event => {
-            if (event.id === eventId) {
-              return updatedEvent;
-            }
-            return event;
-          });
-        });
-      },
-      error: (err) => {
-        alert(err.error.message || 'Une erreur est survenue.');
-        console.error("Erreur lors de l'inscription", err);
-      }
-    });
-  }
+    return updatedList;
+  });
+}
 
   onDelete(eventId: number, eventName: string): void {
     const isConfirmed = confirm(`Êtes-vous sûr de vouloir supprimer l'événement "${eventName}" ?`);
@@ -76,13 +68,28 @@ export class EventListComponent implements OnInit {
     }
   }
 
-  addEventToList(newEvent: GameEvent): void {
-  this.events.update(currentEvents => {
-    const updatedList = [...currentEvents, newEvent];
+  isUserRegistered(event: GameEvent): boolean {
+    const currentUser = this.authService.currentUser();
+    if (!currentUser) return false;
+    return event.participants.some(p => p.id === currentUser.id);
+  }
 
-    updatedList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  toggleRegistration(event: GameEvent): void {
+    const currentUser = this.authService.currentUser();
+    if (!currentUser) {
+      alert("Veuillez vous connecter pour vous inscrire.");
+      return;
+    }
 
-    return updatedList;
-  });
-}
+    const isRegistered = this.isUserRegistered(event);
+    const operation = isRegistered
+      ? this.apiService.unregister(event.id, currentUser.id)
+      : this.apiService.register(event.id, currentUser.id);
+
+    operation.subscribe({
+      next: () => this.loadEvents(),
+      error: (err) => alert(err.error.message || "Une erreur est survenue.")
+    });
+  }
+
 }

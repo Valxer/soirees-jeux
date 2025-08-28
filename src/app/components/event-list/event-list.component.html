@@ -1,6 +1,7 @@
-<app-event-form (eventCreated)="addEventToList($event)"></app-event-form>
-
-<hr class="separator">
+@if (authService.isAdmin()) {
+  <app-event-form (eventCreated)="addEventToList($event)"></app-event-form>
+  <hr class="separator">
+}
 
 <section class="event-list-container">
   <h2>Prochaines soirées</h2>
@@ -16,19 +17,41 @@
         <button (click)="loadEvents()">Réessayer</button>
       </div>
     }
-    
+
     @case ('loaded') {
       <div class="card-container">
         @for (event of events(); track event.id) {
           <article class="event-card">
             <h3>{{ event.name }}</h3>
-            <p><strong>Date :</strong> {{ event.date | date:'dd/MM/yyyy à HH:mm' }}</p>
-            <p><strong>Places :</strong> {{ event.current_players }} / {{ event.max_players }}</p>
+            <div class="participants-section">
+              <strong>Participants :</strong>
+              @if (event.participants.length > 0) {
+                <ul>
+                  @for (participant of event.participants; track participant.id) {
+                    <li>{{ participant.name }}</li>
+                  }
+                </ul>
+              } @else {
+                <p>Aucun inscrit pour le moment.</p>
+              }
+            </div>
+
             <div class="btn-container">
-              <button class="register-btn" (click)="onRegister(event.id)" [disabled]="event.current_players >= event.max_players">
-                @if (event.current_players >= event.max_players) { Complet } @else { S'inscrire }
+              <button class="register-btn" 
+                      (click)="toggleRegistration(event)"
+                      [disabled]="!authService.currentUser() || (event.current_players >= event.max_players && !isUserRegistered(event))">
+                @if (isUserRegistered(event)) {
+                  Se désinscrire
+                } @else if (event.current_players >= event.max_players) {
+                  Complet
+                } @else {
+                  S'inscrire
+                }
               </button>
-              <button class="delete-btn" (click)="onDelete(event.id, event.name)">Supprimer</button>
+              
+              @if (authService.isAdmin()) {
+                <button class="delete-btn" (click)="onDelete(event.id, event.name)">Supprimer</button>
+              }
             </div>
           </article>
         } @empty {
