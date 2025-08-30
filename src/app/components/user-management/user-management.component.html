@@ -1,0 +1,36 @@
+<div class="admin-panel">
+  <a routerLink="/events" class="back-link">&larr; Retour aux événements</a>
+  <h2>Gestion des utilisateurs</h2>
+
+  <div class="add-user-form">
+    <h3>Ajouter un utilisateur</h3>
+    <input type="text" [formControl]="addNameControl" placeholder="Nom de l'utilisateur">
+    <select [formControl]="addRoleControl">
+      <option value="player">Joueur</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button (click)="onAdd()" [disabled]="!addNameControl.valid">Ajouter</button>
+  </div>
+
+  <ul class="user-list">
+    @for (user of users(); track user.id) {
+      <li class="user-item">
+        @if (editingUserId() === user.id) {
+          <input type="text" [formControl]="editNameControl">
+          <div class="actions">
+            <button class="save" (click)="saveEdit(user.id)">Sauvegarder</button>
+            <button class="cancel" (click)="cancelEdit()">Annuler</button>
+          </div>
+        } @else {
+          <span>{{ user.name }} ({{ user.role }})</span>
+          <div class="actions">
+            <button (click)="startEdit(user)">Renommer</button>
+            @if (authService.currentUser()?.id !== user.id) {
+              <button class="delete" (click)="onDelete(user.id)">Supprimer</button>
+            }
+          </div>
+        }
+      </li>
+    }
+  </ul>
+</div>

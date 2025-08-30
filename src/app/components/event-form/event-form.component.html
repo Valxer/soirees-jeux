@@ -1,28 +1,38 @@
-@if (confirmationMessage(); as message) {
-  <div class="confirmation-banner">
-    {{ message }}
+<div class="popup-overlay" (click)="onCancel()">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+
+    <button class="close-btn" (click)="onCancel()">&times;</button>
+
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="event-form">
+      <h3>Ajouter une nouvelle soirée</h3>
+
+      <div class="form-field">
+        <label for="name">Nom de l'événement</label>
+        <input id="name" type="text" formControlName="name" placeholder="Soirée Terraforming Mars">
+      </div>
+
+      <div class="form-field">
+        <label for="date">Date et heure</label>
+        <input id="date" type="datetime-local" formControlName="date">
+      </div>
+
+      <div class="form-field">
+        <label for="max_players">Nombre de places</label>
+        <input id="max_players" type="number" formControlName="max_players">
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" (click)="onCancel()">Annuler</button>
+        <button type="submit" [disabled]="eventForm.invalid">
+          Créer l'événement
+        </button>
+      </div>
+    </form>
+
+    @if (confirmationMessage(); as message) {
+      <div class="confirmation-banner">
+        {{ message }}
+      </div>
+    }
   </div>
-}
-
-<form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="event-form">
-  <h3>Ajouter une nouvelle soirée</h3>
-
-  <div class="form-field">
-    <label for="name">Nom de l'événement</label>
-    <input id="name" type="text" formControlName="name" placeholder="Soirée Terraforming Mars">
-  </div>
-
-  <div class="form-field">
-    <label for="date">Date et heure</label>
-    <input id="date" type="datetime-local" formControlName="date">
-  </div>
-
-  <div class="form-field">
-    <label for="max_players">Nombre de places</label>
-    <input id="max_players" type="number" formControlName="max_players">
-  </div>
-
-  <button type="submit" [disabled]="eventForm.invalid">
-    Créer l'événement
-  </button>
-</form>
+</div>

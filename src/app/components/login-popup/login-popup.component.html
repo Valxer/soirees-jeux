@@ -1,0 +1,15 @@
+<div class="popup-overlay">
+  <div class="popup-content">
+    <h2>Qui êtes-vous ?</h2>
+    <p>Veuillez sélectionner votre profil pour continuer.</p>
+    <select (change)="onSelectUser($event)">
+      <option value="">-- Choisissez un profil --</option>
+      @for (user of users(); track user.id) {
+        <option [value]="user.id">{{ user.name }}</option>
+      }
+    </select>
+    <button (click)="onConfirm()" [disabled]="!selectedUserId()">
+      Confirmer
+    </button>
+  </div>
+</div>

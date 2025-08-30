@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit,computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { GameEvent } from '../../models/event';
@@ -20,6 +20,9 @@ export class EventListComponent implements OnInit {
 
   public events = signal<GameEvent[]>([]);
   public state = signal<LoadingState>('loading'); 
+  isCreatePopupVisible = signal(false);
+
+  
 
   ngOnInit(): void {
     this.loadEvents();
@@ -41,14 +44,13 @@ export class EventListComponent implements OnInit {
   }
   
   addEventToList(newEvent: GameEvent): void {
-  this.events.update(currentEvents => {
-    const updatedList = [...currentEvents, newEvent];
-
-    updatedList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-    return updatedList;
-  });
-}
+    this.events.update(currentEvents => {
+        const updatedList = [...currentEvents, newEvent];
+        updatedList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        return updatedList;
+      });
+      this.closeCreatePopup();
+  }
 
   onDelete(eventId: number, eventName: string): void {
     const isConfirmed = confirm(`Êtes-vous sûr de vouloir supprimer l'événement "${eventName}" ?`);
@@ -90,6 +92,14 @@ export class EventListComponent implements OnInit {
       next: () => this.loadEvents(),
       error: (err) => alert(err.error.message || "Une erreur est survenue.")
     });
+  }
+
+  openCreatePopup(): void {
+    this.isCreatePopupVisible.set(true);
+  }
+
+  closeCreatePopup(): void {
+    this.isCreatePopupVisible.set(false);
   }
 
 }

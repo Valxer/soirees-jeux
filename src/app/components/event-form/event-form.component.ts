@@ -16,6 +16,7 @@ export class EventFormComponent {
   private apiService = inject(ApiService);
 
   @Output() eventCreated = new EventEmitter<GameEvent>();
+  @Output() closePopup = new EventEmitter<void>();
 
   eventForm: FormGroup;
   confirmationMessage = signal<string | null>(null);
@@ -48,5 +49,9 @@ export class EventFormComponent {
         alert(err.error.message || 'Une erreur est survenue.');
       }
     });
+  }
+
+  onCancel(): void {
+    this.closePopup.emit();
   }
 }

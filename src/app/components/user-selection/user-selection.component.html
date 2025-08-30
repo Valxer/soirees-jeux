@@ -2,15 +2,12 @@
   @if (authService.currentUser(); as user) {
     <div class="welcome-message">
       <span>Connecté en tant que : <strong>{{ user.name }}</strong></span>
-      <button (click)="onLogout()">Se déconnecter</button>
-    </div>
-  } @else {
-    <label for="user-select">Qui êtes-vous ?</label>
-    <select id="user-select" (change)="onSelectUser($event)">
-      <option value="">-- Choisissez un profil --</option>
-      @for (user of users(); track user.id) {
-        <option [value]="user.id">{{ user.name }}</option>
+      
+      @if (authService.isAdmin()) {
+        <button routerLink="/admin/users" class="admin-link">Gérer les utilisateurs</button>
       }
-    </select>
+      
+      <button (click)="onLogout()">Changer d'utilisateur</button>
+    </div>
   }
 </div>

@@ -1,10 +1,19 @@
-@if (authService.isAdmin()) {
-  <app-event-form (eventCreated)="addEventToList($event)"></app-event-form>
-  <hr class="separator">
+@if (authService.isAdmin() && isCreatePopupVisible()) {
+  <app-event-form 
+    (eventCreated)="addEventToList($event)"
+    (closePopup)="closeCreatePopup()">
+  </app-event-form>
 }
 
 <section class="event-list-container">
-  <h2>Prochaines soirées</h2>
+  <div class="section-header">
+    <h2>Prochaines soirées</h2>
+    @if (authService.isAdmin()) {
+      <button class="add-btn" (click)="openCreatePopup()">
+        +
+      </button>
+    }
+  </div>
 
   @switch (state()) {
     @case ('loading') {

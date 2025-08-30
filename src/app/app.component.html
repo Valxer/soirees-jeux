@@ -1,6 +1,17 @@
+@if (!authService.currentUser() && !passwordPrompt()) {
+  <app-login-popup (userSelected)="handleUserSelection($event)"></app-login-popup>
+}
+
+@if (passwordPrompt(); as prompt) {
+  <app-password-popup 
+    [mode]="prompt.mode" 
+    [user]="prompt.user" 
+    (success)="onPasswordSuccess()"
+    (cancel)="onPasswordCancel()">
+  </app-password-popup>
+}
+
 <main>
-  <h1>Organisateur de Soirées Jeux</h1>
   <app-user-selection></app-user-selection>
-  <app-event-list></app-event-list>
+  <router-outlet></router-outlet>
 </main>
-<router-outlet></router-outlet>
