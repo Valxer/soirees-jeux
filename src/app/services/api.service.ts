@@ -54,6 +54,10 @@ export class ApiService {
   }
   
   // --- User Management ---
+  getUsers(): Observable<ApiResponse<User[]>> {
+    return this.http.get<{ message: string, data: User[] }>(`${this.apiUrl}/users`);
+  }
+
   addUser(userData: { name: string, role: 'admin' | 'player' }): Observable<ApiResponse<User>> {
     return this.http.post<ApiResponse<User>>(`${this.apiUrl}/users`, userData, { headers: this.getAdminHeaders() });
   }

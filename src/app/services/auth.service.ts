@@ -1,7 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { Observable, tap } from 'rxjs';
 import { ApiService } from './api.service';
 
 export interface User {
@@ -18,10 +17,8 @@ const USER_SESSION_KEY = 'soirees_jeux_session';
   providedIn: 'root'
 })
 export class AuthService {
-  private http = inject(HttpClient);
   private router = inject(Router);
   private apiService = inject(ApiService);
-  private apiUrl = 'http://localhost:3000/api';
 
   currentUser = signal<User | null>(null);
   isAdmin = computed(() => this.currentUser()?.role === 'admin');
@@ -30,21 +27,33 @@ export class AuthService {
     this.checkLocalStorage();
   }
 
-   private checkLocalStorage(): void {
-    const session = localStorage.getItem(USER_SESSION_KEY);
-    if (session) {
-      const { userId, sessionToken } = JSON.parse(session);
-      if (userId && sessionToken) {
-        // On tente de se connecter avec l'ID et le jeton
-        this.login({ userId, sessionToken }).subscribe({
-          error: () => this.logout() // Si le jeton est invalide, on nettoie
+  private checkLocalStorage(): void {
+    const sessionString = localStorage.getItem(USER_SESSION_KEY);
+    if (sessionString) {
+      const session = JSON.parse(sessionString);
+      
+      // On vérifie d'abord si un userId existe, c'est la base
+      if (session.userId) {
+        // Ensuite, on prépare les identifiants pour la connexion
+        const credentials: { userId: number; sessionToken?: string } = {
+          userId: session.userId,
+        };
+
+        // S'il y a aussi un jeton (cas admin), on l'ajoute
+        if (session.sessionToken) {
+          credentials.sessionToken = session.sessionToken;
+        }
+
+        // On tente la connexion avec les identifiants que nous avons
+        this.login(credentials).subscribe({
+          error: () => this.logout(), // Si la session n'est plus valide, on nettoie
         });
       }
     }
   }
 
   getUsers(): Observable<{ message: string, data: User[] }> {
-    return this.http.get<{ message: string, data: User[] }>(`${this.apiUrl}/users`);
+    return this.apiService.getUsers();
   }
 
   login(credentials: { userId: number; password?: string; sessionToken?: string }): Observable<any> {
